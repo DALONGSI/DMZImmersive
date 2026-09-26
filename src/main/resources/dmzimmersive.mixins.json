@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.longsida.dmzimmersive.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "dmzimmersive.refmap.json",
+  "mixins": [
+    "DynamicGrowthServiceMixin"
+  ],
+  "client": [],
+  "server": []
+}
