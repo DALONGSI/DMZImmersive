@@ -1,25 +1,24 @@
-# eclipse
-bin
-*.launch
-.settings
-.metadata
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.eclipse/
+.settings/
 .classpath
 .project
 
-# idea
-out
-*.ipr
-*.iws
-*.iml
-.idea
+# 运行环境
+run/
+run-data/
 
-# gradle
-build
-.gradle
+# 系统
+.DS_Store
+Thumbs.db
 
-# other
-eclipse
-run
-
-# Files from Forge MDK
-forge*changelog.txt
+# 依赖 jar（本地库）
+libs/
