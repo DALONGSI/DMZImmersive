@@ -30,10 +30,10 @@ public class TrainingEventHandler {
             double enemyHealthPerStat = ImmersiveConfig.COMMON.enemyHealthPerStat.get();
             int killsToCap = ImmersiveConfig.COMMON.killsToCap.get();
 
-            int cap = capBase + (int) (totalStats * capCoefficient);
+            double cap = capBase + totalStats * capCoefficient;
 
             CompoundTag pdata = player.getPersistentData();
-            int current = pdata.getInt("dmzimmersive_tp_pool");
+            float current = pdata.getFloat("dmzimmersive_tp_pool");
             if (current >= cap) {
                 event.setTpGain(0);
                 return;
@@ -41,18 +41,18 @@ public class TrainingEventHandler {
 
             int perKillTP = tpPerHit + (int) Math.round(totalStats * enemyHealthPerStat * tpHealthRatio);
             int totalTP = killsToCap * perKillTP;
-            double conversion = totalTP > 0 ? (double) cap / totalTP : 1.0;
+            double conversion = totalTP > 0 ? cap / totalTP : 1.0;
 
-            int hiddenGain = (int) Math.round(incomingTP * conversion);
+            float hiddenGain = (float) (incomingTP * conversion);
 
-            int remaining = cap - current;
+            float remaining = (float) (cap - current);
             if (hiddenGain > remaining) hiddenGain = remaining;
             if (hiddenGain <= 0) {
                 event.setTpGain(0);
                 return;
             }
 
-            pdata.putInt("dmzimmersive_tp_pool", current + hiddenGain);
+            pdata.putFloat("dmzimmersive_tp_pool", current + hiddenGain);
             event.setTpGain(0);
         });
     }

@@ -57,12 +57,12 @@ public class RestEventHandler {
     }
 
     private static boolean applyModeA(ServerPlayer player, StatsData data, CompoundTag pdata) {
-        int totalHidden = pdata.getInt("dmzimmersive_tp_pool");
+        float totalHidden = pdata.getFloat("dmzimmersive_tp_pool");
         if (totalHidden <= 0) return false;
 
         double directRatio = ImmersiveConfig.COMMON.directRatio.get();
         int directTotal = (int) (totalHidden * directRatio);
-        int manualTotal = totalHidden - directTotal;
+        int manualTotal = (int) totalHidden - directTotal;
 
         int remaining = directTotal;
         int[] shares = new int[6];
@@ -71,7 +71,6 @@ public class RestEventHandler {
             shares[i] = (int) (directTotal * w);
             remaining -= shares[i];
         }
-        // 余数按配置给
         int remainderIndex = indexOf(ImmersiveConfig.COMMON.remainderStat.get());
         shares[remainderIndex] += remaining;
 
@@ -83,17 +82,17 @@ public class RestEventHandler {
             data.getResources().addPendingAttributePoints(manualTotal);
         }
 
-        pdata.putInt("dmzimmersive_tp_pool", 0);
+        pdata.putFloat("dmzimmersive_tp_pool", 0);
         return true;
     }
 
     private static boolean applyModeB(ServerPlayer player, StatsData data, CompoundTag pdata) {
         double manualRatio = ImmersiveConfig.COMMON.manualRatio.get();
 
-        int[] pools = new int[6];
-        int totalPool = 0;
+        float[] pools = new float[6];
+        float totalPool = 0;
         for (int i = 0; i < 6; i++) {
-            pools[i] = pdata.getInt("dmzimmersive_growth_" + STATS[i]);
+            pools[i] = pdata.getFloat("dmzimmersive_growth_" + STATS[i]);
             totalPool += pools[i];
         }
         if (totalPool <= 0) return false;
@@ -103,7 +102,7 @@ public class RestEventHandler {
         for (int i = 0; i < 6; i++) {
             int cut = (int) (pools[i] * manualRatio);
             manualTotal += cut;
-            afterManual[i] = pools[i] - cut;
+            afterManual[i] = (int) pools[i] - cut;
         }
 
         int[] attributeGains = new int[6];
@@ -124,7 +123,7 @@ public class RestEventHandler {
         }
 
         for (int i = 0; i < 6; i++) {
-            pdata.putInt("dmzimmersive_growth_" + STATS[i], 0);
+            pdata.putFloat("dmzimmersive_growth_" + STATS[i], 0);
         }
         return true;
     }
@@ -133,7 +132,7 @@ public class RestEventHandler {
         for (int i = 0; i < STATS.length; i++) {
             if (STATS[i].equalsIgnoreCase(stat)) return i;
         }
-        return 4; // 默认 VIT
+        return 4;
     }
 
     private static void addStat(StatsData data, String stat, int amount) {

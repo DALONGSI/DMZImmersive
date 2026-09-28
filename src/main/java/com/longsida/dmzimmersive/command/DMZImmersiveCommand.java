@@ -26,20 +26,22 @@ public class DMZImmersiveCommand {
                                         int totalStats = data.getStats().getTotalStats();
                                         int capBase = ImmersiveConfig.COMMON.capBase.get();
                                         double capCoefficient = ImmersiveConfig.COMMON.capCoefficient.get();
-                                        int cap = capBase + (int) (totalStats * capCoefficient);
+                                        double cap = capBase + totalStats * capCoefficient;
 
                                         CompoundTag pdata = player.getPersistentData();
-                                        int tpPool = pdata.getInt("dmzimmersive_tp_pool");
+                                        float tpPool = pdata.getFloat("dmzimmersive_tp_pool");
 
                                         boolean useSpecialized = ImmersiveConfig.COMMON.useSpecializedTraining.get();
 
                                         source.sendSuccess(() -> Component.literal("§6=== DMZImmersive 隐藏点 ==="), false);
-                                        source.sendSuccess(() -> Component.literal("§eTP 总池: §f" + tpPool + " §7/ " + cap), false);
+                                        source.sendSuccess(() -> Component.literal("§eTP 总池: §f" + String.format("%.2f", tpPool) + " §7/ " + String.format("%.2f", cap)), false);
                                         source.sendSuccess(() -> Component.literal("§6--- 六个子池 ---"), false);
+
                                         for (String stat : STATS) {
-                                            int value = pdata.getInt("dmzimmersive_growth_" + stat);
-                                            source.sendSuccess(() -> Component.literal("§e" + stat + ": §f" + value), false);
+                                            float value = pdata.getFloat("dmzimmersive_growth_" + stat);
+                                            source.sendSuccess(() -> Component.literal("§e" + stat + ": §f" + String.format("%.2f", value)), false);
                                         }
+
                                         source.sendSuccess(() -> Component.literal("§6--- 模式 ---"), false);
                                         source.sendSuccess(() -> Component.literal("§e当前模式: §f" + (useSpecialized ? "B（专项训练）" : "A（固定权重）")), false);
                                     });

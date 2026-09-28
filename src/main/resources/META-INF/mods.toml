@@ -43,6 +43,17 @@ authors="${mod_authors}" #optional
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''${mod_description}'''
+
+[[mixins]]
+    config="dmzimmersive.mixins.json"
+
+[[dependencies.dmzimmersive]]
+    modId="dragonminez"
+    mandatory=true
+    versionRange="[2.1.3,)"
+    ordering="AFTER"
+    side="BOTH"
+
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.${mod_id}]] #optional
     # the modid of the dependency
@@ -72,12 +83,3 @@ description='''${mod_description}'''
 #[features.${mod_id}]
 #openGLVersion="[3.2,)"
 
-[[mixins]]
-config="dmzimmersive.mixins.json"
-
-[[dependencies.dmzimmersive]]
-modId="dragonminez"
-mandatory=true
-versionRange="[2.1.3,)"
-ordering="AFTER"
-side="BOTH"

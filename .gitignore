@@ -21,4 +21,4 @@ run-data/
 Thumbs.db
 
 # 依赖 jar（本地库）
-libs/
+#libs/

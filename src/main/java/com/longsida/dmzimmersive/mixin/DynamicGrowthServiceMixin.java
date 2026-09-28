@@ -27,30 +27,26 @@ public class DynamicGrowthServiceMixin {
         DynamicGrowthConfig cfg = ConfigManager.getServerConfig().getDynamicGrowth();
         if (!cfg.isEnabled()) return;
 
-        // 乘原版倍率
         double xp = baseXp * cfg.getPracticeXpMultiplier() * cfg.getStatPracticeMultiplier(stat.key());
         if (!Double.isFinite(xp) || xp <= 0) { ci.cancel(); return; }
 
-        // 算子里限
         int totalStats = data.getStats().getTotalStats();
         int capBase = ImmersiveConfig.COMMON.capBase.get();
         double capCoefficient = ImmersiveConfig.COMMON.capCoefficient.get();
         double cap = capBase + totalStats * capCoefficient;
         double subCap = cap * ImmersiveConfig.getWeight(stat.key());
 
-        // 算换算率
         double conversion = computeConversion(stat, data, totalStats, subCap, cfg);
         if (conversion <= 0) { ci.cancel(); return; }
 
-        int hiddenGain = (int) Math.round(xp * conversion);
+        float hiddenGain = (float) (xp * conversion);
         if (hiddenGain <= 0) { ci.cancel(); return; }
 
-        // 存进子池（受子上限约束）
         CompoundTag pdata = player.getPersistentData();
         String key = "dmzimmersive_growth_" + stat.key();
-        int current = pdata.getInt(key);
-        int newValue = Math.min(current + hiddenGain, (int) subCap);
-        pdata.putInt(key, newValue);
+        float current = pdata.getFloat(key);
+        float newValue = Math.min(current + hiddenGain, (float) subCap);
+        pdata.putFloat(key, newValue);
 
         ci.cancel();
     }
@@ -62,7 +58,6 @@ public class DynamicGrowthServiceMixin {
 
         switch (stat) {
             case STR, SKP, PWR, VIT -> {
-                // 伤害类：单次 XP = 敌人血量 × 0.2 = totalStats × enemyHealthPerStat × 0.2
                 double tenSessionsXp = sessions * totalStats * enemyHealthPerStat * 0.2;
                 return tenSessionsXp > 0 ? subCap / tenSessionsXp : 0;
             }
