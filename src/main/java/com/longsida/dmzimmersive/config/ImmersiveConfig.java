@@ -87,12 +87,12 @@ public class ImmersiveConfig {
             builder.pop();
 
             builder.push("weights");
-            weightStr = builder.defineInRange("STR", 0.1667, 0.0, 1.0);
-            weightSkp = builder.defineInRange("SKP", 0.1667, 0.0, 1.0);
-            weightPwr = builder.defineInRange("PWR", 0.1667, 0.0, 1.0);
-            weightRes = builder.defineInRange("RES", 0.1667, 0.0, 1.0);
-            weightVit = builder.defineInRange("VIT", 0.1667, 0.0, 1.0);
-            weightEne = builder.defineInRange("ENE", 0.1667, 0.0, 1.0);
+            weightStr = builder.defineInRange("STR", 0.08, 0.0, 1.0);
+            weightSkp = builder.defineInRange("SKP", 0.08, 0.0, 1.0);
+            weightPwr = builder.defineInRange("PWR", 0.08, 0.0, 1.0);
+            weightRes = builder.defineInRange("RES", 0.16, 0.0, 1.0);
+            weightVit = builder.defineInRange("VIT", 0.3, 0.0, 1.0);
+            weightEne = builder.defineInRange("ENE", 0.3, 0.0, 1.0);
             builder.pop();
 
             builder.push("modeA");
