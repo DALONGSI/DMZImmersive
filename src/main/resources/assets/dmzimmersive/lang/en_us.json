@@ -1,3 +1,5 @@
 {
-  "dmzimmersive.message.trained": "You feel stronger..."
+  "dmzimmersive.message.trained": "You feel stronger...",
+  "dmzimmersive.skill.requirement": "%s %d/%d",
+  "dmzimmersive.skill.requirement_met": "Requirements met"
 }

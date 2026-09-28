@@ -1,3 +1,5 @@
 {
-  "dmzimmersive.message.trained": "你感觉身体变强了..."
+  "dmzimmersive.message.trained": "你感觉身体变强了...",
+  "dmzimmersive.skill.requirement": "%s %d/%d",
+  "dmzimmersive.skill.requirement_met": "条件已满足"
 }
