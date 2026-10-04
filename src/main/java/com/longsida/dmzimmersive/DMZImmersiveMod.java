@@ -1,10 +1,12 @@
 package com.longsida.dmzimmersive;
 
+import com.dragonminez.common.stats.StatsCapability;
+import com.dragonminez.common.stats.StatsProvider;
 import com.longsida.dmzimmersive.command.DMZImmersiveCommand;
 import com.longsida.dmzimmersive.config.ImmersiveConfig;
 import com.longsida.dmzimmersive.config.SpPriceConfig;
 import com.longsida.dmzimmersive.network.DmzImmersiveNetwork;
-import com.longsida.dmzimmersive.sp.SpSyncHelper;
+import com.longsida.dmzimmersive.sp.SpManager;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -47,21 +49,31 @@ public class DMZImmersiveMod {
     @SubscribeEvent
     public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer sp) {
-            SpSyncHelper.sync(sp);
+            StatsProvider.get(StatsCapability.INSTANCE, sp).ifPresent(data -> {
+                SpManager.clearCache(sp.getUUID());
+                SpManager.recalcAndSync(sp, data);
+            });
         }
     }
 
     @SubscribeEvent
     public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (event.getEntity() instanceof ServerPlayer sp) {
-            SpSyncHelper.sync(sp);
+            StatsProvider.get(StatsCapability.INSTANCE, sp).ifPresent(data ->
+                    SpManager.recalcAndSync(sp, data));
         }
     }
 
     @SubscribeEvent
     public void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         if (event.getEntity() instanceof ServerPlayer sp) {
-            SpSyncHelper.sync(sp);
+            StatsProvider.get(StatsCapability.INSTANCE, sp).ifPresent(data ->
+                    SpManager.recalcAndSync(sp, data));
         }
+    }
+
+    @SubscribeEvent
+    public void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        SpManager.clearCache(event.getEntity().getUUID());
     }
 }

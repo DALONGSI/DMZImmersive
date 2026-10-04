@@ -5,7 +5,6 @@ import com.dragonminez.common.stats.StatsProvider;
 import com.longsida.dmzimmersive.config.ImmersiveConfig;
 import com.longsida.dmzimmersive.sp.SpManager;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.nbt.CompoundTag;
@@ -54,38 +53,15 @@ public class DMZImmersiveCommand {
                         .then(Commands.literal("sp")
                                 .executes(ctx -> {
                                     ServerPlayer player = ctx.getSource().getPlayerOrException();
-                                    int sp = SpManager.getSp(player);
-                                    ctx.getSource().sendSuccess(
-                                            () -> Component.literal("§b当前 SP: §f" + sp), false);
-                                    return sp;
+                                    StatsProvider.get(StatsCapability.INSTANCE, player).ifPresent(data -> {
+                                        int available = SpManager.calcAvailable(player, data);
+                                        int level = data.getLevel();
+                                        ctx.getSource().sendSuccess(
+                                                () -> Component.literal("§b可用 SP: §f" + available + " §7(等级 " + level + ")"),
+                                                false);
+                                    });
+                                    return 1;
                                 })
-                                .then(Commands.literal("set")
-                                        .requires(src -> src.hasPermission(2))
-                                        .then(Commands.argument("amount", IntegerArgumentType.integer(0))
-                                                .executes(ctx -> {
-                                                    ServerPlayer player = ctx.getSource().getPlayerOrException();
-                                                    int amount = IntegerArgumentType.getInteger(ctx, "amount");
-                                                    SpManager.setSp(player, amount);
-                                                    ctx.getSource().sendSuccess(
-                                                            () -> Component.literal("§a已将 SP 设置为 §f" + amount), true);
-                                                    return amount;
-                                                })
-                                        )
-                                )
-                                .then(Commands.literal("add")
-                                        .requires(src -> src.hasPermission(2))
-                                        .then(Commands.argument("amount", IntegerArgumentType.integer())
-                                                .executes(ctx -> {
-                                                    ServerPlayer player = ctx.getSource().getPlayerOrException();
-                                                    int amount = IntegerArgumentType.getInteger(ctx, "amount");
-                                                    SpManager.addSp(player, amount);
-                                                    int now = SpManager.getSp(player);
-                                                    ctx.getSource().sendSuccess(
-                                                            () -> Component.literal("§a已增加 SP，当前: §f" + now), true);
-                                                    return now;
-                                                })
-                                        )
-                                )
                         )
         );
     }

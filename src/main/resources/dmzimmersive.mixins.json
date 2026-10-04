@@ -6,7 +6,8 @@
   "refmap": "dmzimmersive.refmap.json",
   "mixins": [
     "DynamicGrowthServiceMixin",
-    "UpdateSkillC2SMixin"
+    "UpdateSkillC2SMixin",
+    "StatsDataMixin"
   ],
   "client": [
     "client.SkillsMenuScreenMixin",

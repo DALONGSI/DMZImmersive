@@ -1,57 +1,58 @@
 package com.longsida.dmzimmersive.sp;
 
-import net.minecraft.nbt.CompoundTag;
+import com.dragonminez.common.stats.StatsData;
+import com.dragonminez.common.stats.skills.Skill;
+import com.longsida.dmzimmersive.config.SpPriceConfig;
+import com.longsida.dmzimmersive.network.DmzImmersiveNetwork;
+import com.longsida.dmzimmersive.network.packet.SpSyncS2C;
 import net.minecraft.server.level.ServerPlayer;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public final class SpManager {
 
-    private static final String KEY_SP = "dmzimmersive_sp";
-    private static final String KEY_LAST_LEVEL = "dmzimmersive_sp_last_level";
+    private static final Map<UUID, Integer> LAST_SYNCED = new HashMap<>();
 
     private SpManager() {}
 
-    public static int getSp(ServerPlayer player) {
-        return player.getPersistentData().getInt(KEY_SP);
-    }
+    /** 可用 SP = 当前等级 - 已花 */
+    public static int calcAvailable(ServerPlayer player, StatsData data) {
+        int totalEarned = data.getLevel();
+        int totalSpent = 0;
 
-    public static void setSp(ServerPlayer player, int amount) {
-        player.getPersistentData().putInt(KEY_SP, Math.max(0, amount));
-        SpSyncHelper.sync(player);
-    }
+        for (Map.Entry<String, Skill> entry : data.getSkills().getAllSkills().entrySet()) {
+            String skillName = entry.getKey();
+            Skill skill = entry.getValue();
+            if (skill == null) continue;
+            int lv = skill.getLevel();
+            if (lv <= 0) continue;
 
-    public static void addSp(ServerPlayer player, int amount) {
-        setSp(player, getSp(player) + amount);
-    }
+            int[] prices = SpPriceConfig.INSTANCE.getPrices(skillName);
+            if (prices.length == 0) continue;
 
-    public static boolean spendSp(ServerPlayer player, int amount) {
-        if (amount <= 0) return true;
-        int current = getSp(player);
-        if (current < amount) return false;
-        setSp(player, current - amount);
-        return true;
-    }
-
-    public static int getLastGrantedLevel(ServerPlayer player) {
-        return player.getPersistentData().getInt(KEY_LAST_LEVEL);
-    }
-
-    public static void setLastGrantedLevel(ServerPlayer player, int level) {
-        player.getPersistentData().putInt(KEY_LAST_LEVEL, Math.max(0, level));
-        SpSyncHelper.sync(player);
-    }
-
-    public static int grantSpForLevel(ServerPlayer player, int currentLevel) {
-        int last = getLastGrantedLevel(player);
-        if (currentLevel == last) return 0;
-
-        if (currentLevel < last) {
-            setLastGrantedLevel(player, currentLevel);
-            return 0;
+            for (int i = 0; i < lv; i++) {
+                int idx = Math.min(i, prices.length - 1);
+                int p = prices[idx];
+                if (p > 0) totalSpent += p;
+            }
         }
 
-        int gain = currentLevel - last;
-        addSp(player, gain);
-        setLastGrantedLevel(player, currentLevel);
-        return gain;
+        return Math.max(0, totalEarned - totalSpent);
+    }
+
+    /** 重算并同步（值没变不发包） */
+    public static void recalcAndSync(ServerPlayer player, StatsData data) {
+        int available = calcAvailable(player, data);
+        Integer last = LAST_SYNCED.get(player.getUUID());
+        if (last != null && last == available) return;
+        LAST_SYNCED.put(player.getUUID(), available);
+        DmzImmersiveNetwork.sendToPlayer(
+                new SpSyncS2C(available, data.getLevel()), player);
+    }
+
+    public static void clearCache(UUID uuid) {
+        LAST_SYNCED.remove(uuid);
     }
 }

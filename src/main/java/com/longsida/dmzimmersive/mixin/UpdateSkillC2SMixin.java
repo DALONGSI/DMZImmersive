@@ -60,11 +60,13 @@ public abstract class UpdateSkillC2SMixin {
 
                         int price = SpPriceConfig.INSTANCE.getPrice(skillName, skill.getLevel(), isFormSkill);
                         if (price < 0) break;
-                        if (SpManager.spendSp(player, price)) {
-                            boolean wasLevelZero = skill.getLevel() == 0;
-                            skill.addLevel(1);
-                            if (wasLevelZero) unlockTechniqueIfPresent(data, skillName);
-                        }
+
+                        int available = SpManager.calcAvailable(player, data);
+                        if (available < price) break;
+
+                        boolean wasLevelZero = skill.getLevel() == 0;
+                        skill.addLevel(1);
+                        if (wasLevelZero) unlockTechniqueIfPresent(data, skillName);
                     }
                     case PURCHASE -> {
                         if (!raceAllowed) break;
@@ -82,15 +84,18 @@ public abstract class UpdateSkillC2SMixin {
 
                         int price = SpPriceConfig.INSTANCE.getPrice(skillName, 0, isFormSkillPurchase);
                         if (price < 0) break;
-                        if (SpManager.spendSp(player, price)) {
-                            data.getSkills().setSkillLevel(skillName, 1);
-                            Skill purchased = data.getSkills().getSkill(skillName);
-                            if (purchased != null) refreshRuntimeMaxLevel(data, skillName, purchased);
-                            unlockTechniqueIfPresent(data, skillName);
-                        }
+
+                        int available = SpManager.calcAvailable(player, data);
+                        if (available < price) break;
+
+                        data.getSkills().setSkillLevel(skillName, 1);
+                        Skill purchased = data.getSkills().getSkill(skillName);
+                        if (purchased != null) refreshRuntimeMaxLevel(data, skillName, purchased);
+                        unlockTechniqueIfPresent(data, skillName);
                     }
                 }
                 NetworkHandler.sendToTrackingEntityAndSelf(new StatsSyncS2C(player), player);
+                SpManager.recalcAndSync(player, data);
             });
         });
         ctx.get().setPacketHandled(true);

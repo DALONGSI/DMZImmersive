@@ -40,13 +40,8 @@ public class RestEventHandler {
             }
 
             // 改动 START
-            int level = data.getLevel();
-            int granted = SpManager.grantSpForLevel(player, level);
-            if (granted > 0) {
-                player.displayClientMessage(
-                        Component.literal("§b获得 " + granted + " 技能点（SP）"), false);
-            }
-            // 改动 END            
+            SpManager.recalcAndSync(player, data);
+            // 改动 END
 
             if (!changed) return;
 
