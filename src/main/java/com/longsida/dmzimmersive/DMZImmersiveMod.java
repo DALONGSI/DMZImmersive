@@ -5,6 +5,7 @@ import com.dragonminez.common.stats.StatsProvider;
 import com.longsida.dmzimmersive.command.DMZImmersiveCommand;
 import com.longsida.dmzimmersive.config.ImmersiveConfig;
 import com.longsida.dmzimmersive.config.SpPriceConfig;
+import com.longsida.dmzimmersive.effect.ModEffects;
 import com.longsida.dmzimmersive.network.DmzImmersiveNetwork;
 import com.longsida.dmzimmersive.sp.SpManager;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,6 +27,7 @@ public class DMZImmersiveMod {
                 "dmzimmersive/immersive-common.toml");
         context.registerConfig(ModConfig.Type.COMMON, SpPriceConfig.SPEC,
                 "dmzimmersive/sp-prices.toml");
+        ModEffects.EFFECTS.register(context.getModEventBus());
         context.getModEventBus().addListener(this::commonSetup);
         MinecraftForge.EVENT_BUS.register(this);
     }

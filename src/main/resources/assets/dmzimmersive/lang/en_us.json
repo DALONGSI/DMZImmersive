@@ -1,3 +1,5 @@
 {
-  "dmzimmersive.message.trained": "You feel stronger..."
+  "dmzimmersive.message.trained": "You feel stronger...",
+  "effect.dmzimmersive.combat_ready": "Combat Ready",
+  "effect.dmzimmersive.recovering": "Recovering"
 }

@@ -1,3 +1,5 @@
 {
-  "dmzimmersive.message.trained": "你感觉身体变强了..."
+  "dmzimmersive.message.trained": "你感觉身体变强了...",
+  "effect.dmzimmersive.combat_ready": "充分战斗",
+  "effect.dmzimmersive.recovering": "恢复中"
 }

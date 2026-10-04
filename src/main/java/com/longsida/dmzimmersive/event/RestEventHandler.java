@@ -25,7 +25,10 @@ public class RestEventHandler {
     @SubscribeEvent
     public static void onWakeUp(PlayerWakeUpEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        doRest(player);
+    }
 
+    public static void doRest(ServerPlayer player) {
         StatsProvider.get(StatsCapability.INSTANCE, player).ifPresent(data -> {
             if (!data.getStatus().isHasCreatedCharacter()) return;
 
@@ -39,9 +42,7 @@ public class RestEventHandler {
                 changed = applyModeA(player, data, pdata);
             }
 
-            // 改动 START
             SpManager.recalcAndSync(player, data);
-            // 改动 END
 
             if (!changed) return;
 
@@ -54,10 +55,7 @@ public class RestEventHandler {
             );
             player.playNotifySound(SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 0.6F, 1.0F);
 
-            // ===== 提示音留白 =====
-            // TODO: 以后在这里加自定义音效或语音
             System.out.println("[DMZImmersive] 我变强了");
-            // ===== 留白结束 =====
         });
     }
 
