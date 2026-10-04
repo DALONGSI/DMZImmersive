@@ -7,6 +7,7 @@ import com.dragonminez.common.stats.StatsData;
 import com.dragonminez.common.stats.StatsProvider;
 import com.dragonminez.server.events.players.StatsEvents;
 import com.longsida.dmzimmersive.config.ImmersiveConfig;
+import com.longsida.dmzimmersive.sp.SpManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -37,6 +38,15 @@ public class RestEventHandler {
             } else {
                 changed = applyModeA(player, data, pdata);
             }
+
+            // 改动 START
+            int level = data.getLevel();
+            int granted = SpManager.grantSpForLevel(player, level);
+            if (granted > 0) {
+                player.displayClientMessage(
+                        Component.literal("§b获得 " + granted + " 技能点（SP）"), false);
+            }
+            // 改动 END            
 
             if (!changed) return;
 

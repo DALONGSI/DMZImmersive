@@ -5,8 +5,12 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "dmzimmersive.refmap.json",
   "mixins": [
-    "DynamicGrowthServiceMixin"
+    "DynamicGrowthServiceMixin",
+    "UpdateSkillC2SMixin"
   ],
-  "client": [],
+  "client": [
+    "client.SkillsMenuScreenMixin",
+    "client.MastersSkillsScreenMixin"
+  ],
   "server": []
 }
