@@ -42,6 +42,8 @@ public abstract class UpdateSkillC2SMixin {
                 boolean raceAllowed = isSkillAllowedForPlayerRace(data, skillName);
                 boolean isFormSkill = ConfigManager.getSkillsConfig()
                         .getFormSkills().contains(skillName.toLowerCase());
+                String raceName = data.getCharacter() != null
+                        ? data.getCharacter().getRaceName() : "";
 
                 switch (action) {
                     case TOGGLE -> {
@@ -58,7 +60,8 @@ public abstract class UpdateSkillC2SMixin {
                         if (skill.isMaxLevel()) break;
                         if (skillName.equals("potentialunlock") && skill.getLevel() == 10) break;
 
-                        int price = SpPriceConfig.INSTANCE.getPrice(skillName, skill.getLevel(), isFormSkill);
+                        int price = SpPriceConfig.INSTANCE.getPrice(
+                                skillName, skill.getLevel(), isFormSkill, raceName);
                         if (price < 0) break;
 
                         int available = SpManager.calcAvailable(player, data);
@@ -73,8 +76,7 @@ public abstract class UpdateSkillC2SMixin {
                         boolean isFormSkillPurchase = ConfigManager.getSkillsConfig()
                                 .getFormSkills().contains(skillName.toLowerCase());
                         if (isFormSkillPurchase) {
-                            var charConfig = ConfigManager.getRaceCharacter(
-                                    data.getCharacter().getRaceName());
+                            var charConfig = ConfigManager.getRaceCharacter(raceName);
                             if (charConfig == null || !charConfig.hasFormSkill(skillName)) break;
                         }
                         boolean notOwned = !data.getSkills().hasSkill(skillName)
@@ -82,7 +84,8 @@ public abstract class UpdateSkillC2SMixin {
                                 && data.getSkills().getSkillLevel(skillName) == 0);
                         if (!notOwned) break;
 
-                        int price = SpPriceConfig.INSTANCE.getPrice(skillName, 0, isFormSkillPurchase);
+                        int price = SpPriceConfig.INSTANCE.getPrice(
+                                skillName, 0, isFormSkillPurchase, raceName);
                         if (price < 0) break;
 
                         int available = SpManager.calcAvailable(player, data);

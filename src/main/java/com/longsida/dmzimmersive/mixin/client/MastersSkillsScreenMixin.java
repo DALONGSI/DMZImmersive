@@ -34,6 +34,16 @@ public abstract class MastersSkillsScreenMixin {
         int originalCost = readOriginalCost(key, currentLevel);
         if (originalCost == -1) return -1;
 
+        String race = (statsData != null && statsData.getCharacter() != null)
+                ? statsData.getCharacter().getRaceName() : "";
+
+        int[] racePrices = SpPriceConfig.INSTANCE.getPrices(key, race);
+        if (racePrices.length > 0) {
+            if (currentLevel < 0) currentLevel = 0;
+            if (currentLevel >= racePrices.length) return racePrices[racePrices.length - 1];
+            return racePrices[currentLevel];
+        }
+
         boolean isForm = ConfigManager.getSkillsConfig().getFormSkills().contains(key);
         boolean isStack = ConfigManager.getSkillsConfig().getStackSkills().contains(key);
         boolean isFormLike = isForm || isStack;

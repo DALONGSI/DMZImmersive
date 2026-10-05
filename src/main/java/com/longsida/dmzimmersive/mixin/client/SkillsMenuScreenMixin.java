@@ -31,9 +31,18 @@ public abstract class SkillsMenuScreenMixin {
 
         String key = skillName.toLowerCase(Locale.ROOT);
 
-        // 先读原版价格：如果是 -1，表示该等级只能靠关卡解锁，禁止购买
         int originalCost = readOriginalCost(key, targetLevel);
         if (originalCost == -1) return -1;
+
+        String race = (statsData != null && statsData.getCharacter() != null)
+                ? statsData.getCharacter().getRaceName() : "";
+
+        int[] racePrices = SpPriceConfig.INSTANCE.getPrices(key, race);
+        if (racePrices.length > 0) {
+            if (targetLevel < 0) targetLevel = 0;
+            if (targetLevel >= racePrices.length) return racePrices[racePrices.length - 1];
+            return racePrices[targetLevel];
+        }
 
         boolean isForm = ConfigManager.getSkillsConfig().getFormSkills().contains(key);
         boolean isStack = ConfigManager.getSkillsConfig().getStackSkills().contains(key);
