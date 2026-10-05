@@ -69,7 +69,7 @@ public class ImmersiveConfig {
             builder.push("tp");
             tpPerHit = builder.defineInRange("tpPerHit", 2, 0, Integer.MAX_VALUE);
             tpHealthRatio = builder.defineInRange("tpHealthRatio", 0.25, 0.0, 10.0);
-            enemyHealthPerStat = builder.defineInRange("enemyHealthPerStat", 0.5, 0.0, 100.0);
+            enemyHealthPerStat = builder.defineInRange("enemyHealthPerStat", 1.5, 0.0, 100.0);
             killsToCap = builder.defineInRange("killsToCap", 10, 1, Integer.MAX_VALUE);
             builder.pop();
 
