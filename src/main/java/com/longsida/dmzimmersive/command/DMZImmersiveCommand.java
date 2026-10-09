@@ -32,7 +32,8 @@ public class DMZImmersiveCommand {
                                         CompoundTag pdata = player.getPersistentData();
                                         float tpPool = pdata.getFloat("dmzimmersive_tp_pool");
 
-                                        boolean useSpecialized = ImmersiveConfig.COMMON.useSpecializedTraining.get();
+//                                        boolean useSpecialized = ImmersiveConfig.COMMON.useSpecializedTraining.get();
+                                        String mode = ImmersiveConfig.COMMON.trainingMode.get();
 
                                         source.sendSuccess(() -> Component.literal("§6=== DMZImmersive 隐藏点 ==="), false);
                                         source.sendSuccess(() -> Component.literal("§eTP 总池: §f" + String.format("%.2f", tpPool) + " §7/ " + String.format("%.2f", cap)), false);
@@ -44,7 +45,8 @@ public class DMZImmersiveCommand {
                                         }
 
                                         source.sendSuccess(() -> Component.literal("§6--- 模式 ---"), false);
-                                        source.sendSuccess(() -> Component.literal("§e当前模式: §f" + (useSpecialized ? "B（专项训练）" : "A（固定权重）")), false);
+//                                        source.sendSuccess(() -> Component.literal("§e当前模式: §f" + (useSpecialized ? "B（专项训练）" : "A（固定权重）")), false);
+                                        source.sendSuccess(() -> Component.literal("§e当前模式: §f" + mode), false);
                                     });
 
                                     return 1;

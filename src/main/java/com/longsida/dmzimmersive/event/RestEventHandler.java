@@ -33,13 +33,20 @@ public class RestEventHandler {
             if (!data.getStatus().isHasCreatedCharacter()) return;
 
             CompoundTag pdata = player.getPersistentData();
-            boolean useSpecialized = ImmersiveConfig.COMMON.useSpecializedTraining.get();
+//            boolean useSpecialized = ImmersiveConfig.COMMON.useSpecializedTraining.get();
 
-            boolean changed;
-            if (useSpecialized) {
-                changed = applyModeB(player, data, pdata);
-            } else {
-                changed = applyModeA(player, data, pdata);
+//            boolean changed;
+//            if (useSpecialized) {
+//                changed = applyModeB(player, data, pdata);
+//            } else {
+//                changed = applyModeA(player, data, pdata);
+//            }
+            boolean changed = false;
+            if (ImmersiveConfig.COMMON.isModeA()) {
+                changed |= applyModeA(player, data, pdata);
+            }
+            if (ImmersiveConfig.COMMON.isModeB()) {
+                changed |= applyModeB(player, data, pdata);
             }
 
             SpManager.recalcAndSync(player, data);

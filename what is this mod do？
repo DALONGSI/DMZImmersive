@@ -19,7 +19,7 @@ This makes growth feel earned rather than bought, and prevents the early-game ru
 **Two Distribution Modes**
 - **Mode A**: Hidden points are distributed by fixed weights.
 - **Mode B**: Hidden points are mapped via a 6×6 distributor, supporting specialized training.
-- Switch with `useSpecializedTraining` in the config.
+- Switch with `trainingMode` in the config.
 
 **Direct + Manual Split** — On conversion, X% goes directly to stats and Y% becomes freely assignable points. Ratios are configurable.
 
@@ -64,7 +64,7 @@ GPL-3.0
 **双模式分配**
 - **模式 A**：隐藏点按固定权重分配到六项属性。
 - **模式 B**：按 6×6 分配器映射到六项属性，支持专项训练。
-- 通过配置文件 `useSpecializedTraining` 切换。
+- 通过配置文件 `trainingMode` 切换。
 
 **直接分配 + 自由加点** — 每次兑现时，X% 直接分配到属性，Y% 转换为可自由分配的点数。比例可在配置中调整。
 

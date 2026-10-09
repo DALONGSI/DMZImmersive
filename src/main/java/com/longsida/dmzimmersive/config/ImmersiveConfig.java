@@ -29,7 +29,8 @@ public class ImmersiveConfig {
         public final ForgeConfigSpec.IntValue trainingSessions;
 
         // 模式选择
-        public final ForgeConfigSpec.BooleanValue useSpecializedTraining;
+//        public final ForgeConfigSpec.BooleanValue useSpecializedTraining;
+        public final ForgeConfigSpec.ConfigValue<String> trainingMode;
 
         // tp分成 直接经系统分配、自己手动加点比例
         public final ForgeConfigSpec.DoubleValue directRatio;
@@ -62,6 +63,17 @@ public class ImmersiveConfig {
         public final ForgeConfigSpec.ConfigValue<String> distributorVit;
         public final ForgeConfigSpec.ConfigValue<String> distributorEne;
 
+        //获取训练模式
+        public boolean isModeA() {
+            String m = trainingMode.get();
+            return "A".equalsIgnoreCase(m) || "AB".equalsIgnoreCase(m);
+        }
+
+        public boolean isModeB() {
+            String m = trainingMode.get();
+            return "B".equalsIgnoreCase(m) || "AB".equalsIgnoreCase(m);
+        }
+
         public Common(ForgeConfigSpec.Builder builder) {
             builder.push("cap");
             capBase = builder.defineInRange("capBase", 10, 0, Integer.MAX_VALUE);
@@ -80,7 +92,13 @@ public class ImmersiveConfig {
             builder.pop();
 
             builder.push("mode");
-            useSpecializedTraining = builder.define("useSpecializedTraining", false);
+//            useSpecializedTraining = builder.define("useSpecializedTraining", false);
+            trainingMode = builder.comment(
+                    "训练模式：",
+                    "  A  = 固定权重（隐藏池按权重分配）",
+                    "  B  = 专项训练（每个子池独立结算）",
+                    "  AB = 同时开启 A 和 B"
+            ).define("trainingMode", "A");
             directRatio = builder.defineInRange("directRatio", 0.9, 0.0, 1.0);
             manualRatio = builder.defineInRange("manualRatio", 0.1, 0.0, 1.0);
             remainderStat = builder
