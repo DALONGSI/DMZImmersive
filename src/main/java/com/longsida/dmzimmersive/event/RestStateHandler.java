@@ -17,7 +17,7 @@ public class RestStateHandler {
 
     private static final float ENTER_THRESHOLD = 0.40f;
     private static final float EXIT_THRESHOLD = 0.90f;
-    private static final int BUFF_DURATION = 3 * 60 * 20;
+    private static final int BUFF_DURATION = 90 * 20;
 
     private static final Map<UUID, Boolean> LAST_HAD_COMBAT = new HashMap<>();
 

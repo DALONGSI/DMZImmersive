@@ -63,18 +63,18 @@ public class ImmersiveConfig {
         public Common(ForgeConfigSpec.Builder builder) {
             builder.push("cap");
             capBase = builder.defineInRange("capBase", 10, 0, Integer.MAX_VALUE);
-            capCoefficient = builder.defineInRange("capCoefficient", 0.07, 0.0, 10.0);
+            capCoefficient = builder.defineInRange("capCoefficient", 0.05, 0.0, 10.0);
             builder.pop();
 
             builder.push("tp");
             tpPerHit = builder.defineInRange("tpPerHit", 2, 0, Integer.MAX_VALUE);
             tpHealthRatio = builder.defineInRange("tpHealthRatio", 0.25, 0.0, 10.0);
             enemyHealthPerStat = builder.defineInRange("enemyHealthPerStat", 1.5, 0.0, 100.0);
-            killsToCap = builder.defineInRange("killsToCap", 10, 1, Integer.MAX_VALUE);
+            killsToCap = builder.defineInRange("killsToCap", 25, 1, Integer.MAX_VALUE);
             builder.pop();
 
             builder.push("training");
-            trainingSessions = builder.defineInRange("trainingSessions", 10, 1, Integer.MAX_VALUE);
+            trainingSessions = builder.defineInRange("trainingSessions", 25, 1, Integer.MAX_VALUE);
             builder.pop();
 
             builder.push("mode");
@@ -87,21 +87,21 @@ public class ImmersiveConfig {
             builder.pop();
 
             builder.push("weights");
-            weightStr = builder.defineInRange("STR", 0.08, 0.0, 1.0);
-            weightSkp = builder.defineInRange("SKP", 0.08, 0.0, 1.0);
-            weightPwr = builder.defineInRange("PWR", 0.08, 0.0, 1.0);
-            weightRes = builder.defineInRange("RES", 0.16, 0.0, 1.0);
+            weightStr = builder.defineInRange("STR", 0.1, 0.0, 1.0);
+            weightSkp = builder.defineInRange("SKP", 0.1, 0.0, 1.0);
+            weightPwr = builder.defineInRange("PWR", 0.1, 0.0, 1.0);
+            weightRes = builder.defineInRange("RES", 0.1, 0.0, 1.0);
             weightVit = builder.defineInRange("VIT", 0.3, 0.0, 1.0);
             weightEne = builder.defineInRange("ENE", 0.3, 0.0, 1.0);
             builder.pop();
 
             builder.push("modeA");
-            modeAStr = builder.defineInRange("STR", 0.1667, 0.0, 1.0);
-            modeASkp = builder.defineInRange("SKP", 0.1667, 0.0, 1.0);
-            modeAPwr = builder.defineInRange("PWR", 0.1667, 0.0, 1.0);
-            modeARes = builder.defineInRange("RES", 0.1667, 0.0, 1.0);
-            modeAVit = builder.defineInRange("VIT", 0.1667, 0.0, 1.0);
-            modeAEne = builder.defineInRange("ENE", 0.1667, 0.0, 1.0);
+            modeAStr = builder.defineInRange("STR", 0.1, 0.0, 1.0);
+            modeASkp = builder.defineInRange("SKP", 0.1, 0.0, 1.0);
+            modeAPwr = builder.defineInRange("PWR", 0.1, 0.0, 1.0);
+            modeARes = builder.defineInRange("RES", 0.1, 0.0, 1.0);
+            modeAVit = builder.defineInRange("VIT", 0.3, 0.0, 1.0);
+            modeAEne = builder.defineInRange("ENE", 0.3, 0.0, 1.0);
             builder.pop();
 
             builder.push("modeB");

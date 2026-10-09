@@ -151,7 +151,7 @@ public class SpPriceConfig {
 
         builder.push("SP_Race_Forms");
         builder.comment("全局默认（未在下面种族 section 列出的技能走这里）");
-        superforms = def(builder, "superforms", 100,120,140,130,120,110,100,100);
+        superforms = def(builder, "superforms", 65,75,85,110,150,200,240,260);
         androidforms = def(builder, "androidforms", 100,120);
         legendaryforms = def(builder, "legendaryforms", -1,-1,-1);
         godforms = def(builder, "godforms", -1);

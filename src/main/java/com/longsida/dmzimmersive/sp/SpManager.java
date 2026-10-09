@@ -17,10 +17,11 @@ public final class SpManager {
 
     private SpManager() {}
 
-    /** 可用 SP = 当前等级 - 已花 */
     public static int calcAvailable(ServerPlayer player, StatsData data) {
         int totalEarned = data.getLevel();
         int totalSpent = 0;
+
+        String race = (data.getCharacter() != null) ? data.getCharacter().getRaceName() : "";
 
         for (Map.Entry<String, Skill> entry : data.getSkills().getAllSkills().entrySet()) {
             String skillName = entry.getKey();
@@ -29,7 +30,10 @@ public final class SpManager {
             int lv = skill.getLevel();
             if (lv <= 0) continue;
 
-            int[] prices = SpPriceConfig.INSTANCE.getPrices(skillName);
+            int[] prices = SpPriceConfig.INSTANCE.getPrices(skillName, race);
+            if (prices.length == 0) {
+                prices = SpPriceConfig.INSTANCE.getPrices(skillName);
+            }
             if (prices.length == 0) continue;
 
             for (int i = 0; i < lv; i++) {
@@ -42,7 +46,6 @@ public final class SpManager {
         return Math.max(0, totalEarned - totalSpent);
     }
 
-    /** 重算并同步（值没变不发包） */
     public static void recalcAndSync(ServerPlayer player, StatsData data) {
         int available = calcAvailable(player, data);
         Integer last = LAST_SYNCED.get(player.getUUID());
