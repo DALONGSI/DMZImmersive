@@ -11,7 +11,8 @@
   ],
   "client": [
     "client.SkillsMenuScreenMixin",
-    "client.MastersSkillsScreenMixin"
+    "client.MastersSkillsScreenMixin",
+    "client.CharacterStatsScreenMixin"
   ],
   "server": []
 }
