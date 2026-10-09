@@ -15,28 +15,30 @@ public class ImmersiveConfig {
     }
 
     public static class Common {
-        // 上限
+        // 上限 最低下限、百分比提升率
         public final ForgeConfigSpec.IntValue capBase;
         public final ForgeConfigSpec.DoubleValue capCoefficient;
 
-        // TP 路径
+        // TP 获取路径
         public final ForgeConfigSpec.IntValue tpPerHit;
         public final ForgeConfigSpec.DoubleValue tpHealthRatio;
         public final ForgeConfigSpec.DoubleValue enemyHealthPerStat;
         public final ForgeConfigSpec.IntValue killsToCap;
 
-        // 训练场次
+        // 模式B 训练场次
         public final ForgeConfigSpec.IntValue trainingSessions;
 
-        // 模式
+        // 模式选择
         public final ForgeConfigSpec.BooleanValue useSpecializedTraining;
+
+        // tp分成 直接经系统分配、自己手动加点比例
         public final ForgeConfigSpec.DoubleValue directRatio;
         public final ForgeConfigSpec.DoubleValue manualRatio;
 
         // 余数给谁
         public final ForgeConfigSpec.ConfigValue<String> remainderStat;
 
-        // 六项权重
+        // 模式 B (TP子池上限权重) 六项权重
         public final ForgeConfigSpec.DoubleValue weightStr;
         public final ForgeConfigSpec.DoubleValue weightSkp;
         public final ForgeConfigSpec.DoubleValue weightPwr;
