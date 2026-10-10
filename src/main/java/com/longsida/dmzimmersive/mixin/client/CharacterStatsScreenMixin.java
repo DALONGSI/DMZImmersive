@@ -32,6 +32,8 @@ public class CharacterStatsScreenMixin {
             ResourceLocation.fromNamespaceAndPath("dragonminez", "smooth");
 
     @Shadow private StatsData statsData;
+    @Shadow private int tpMultiplier;
+    @Shadow private boolean useHexagonView;
 
     //同步用户属性值界面，每次打开刷新数值，不然tp sp一直会显示一开始的
     @Inject(method = "m_7856_", at = @At("TAIL"), remap = false)
@@ -110,7 +112,67 @@ public class CharacterStatsScreenMixin {
         } else {
             formComponent = baseFormComponent;
         }
-        graphics.drawString(font, formComponent, valueX + 5, startY + 22, 13101820, true);
+        com.dragonminez.client.util.TextUtil.drawStringWithBorder(graphics, font, formComponent, valueX + 5, startY + 22, 13101820, 0);
+        //变身tooltip
+        if (mouseX >= valueX + 5 && mouseX <= valueX + 85 && mouseY >= startY + 22 && mouseY <= startY + 22 + 9) {
+            MutableComponent tooltipTitle = Component.translatable("gui.dragonminez.character_stats.form.mastery")
+                    .withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.GOLD));
+            List<Component> tooltipLines = new ArrayList<>();
+
+            if (!isBase) {
+                String currentFormGroup = this.statsData.getCharacter().getActiveFormGroup();
+                if (currentFormGroup != null && !currentFormGroup.isEmpty()) {
+                    var formConfig = com.dragonminez.common.config.ConfigManager.getFormGroup(
+                            this.statsData.getCharacter().getRaceName(), currentFormGroup);
+                    if (formConfig != null) {
+                        var formData = formConfig.getForm(form);
+                        if (formData != null) {
+                            double mastery = this.statsData.getCharacter().getFormMasteries()
+                                    .getMastery(currentFormGroup, form);
+                            double maxMastery = formData.getMaxMastery();
+                            tooltipLines.add(
+                                    Component.literal(" ").withStyle(Style.EMPTY.withFont(DMZ_FONT))
+                                            .append(baseFormComponent.copy().withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.GRAY)))
+                                            .append(Component.literal(": " + String.format(Locale.US, "%.2f", mastery)
+                                                            + " / " + String.format(Locale.US, "%.0f", maxMastery))
+                                                    .withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.AQUA))));
+                        }
+                    }
+                }
+            }
+
+            if (hasActiveStack) {
+                String currentStackGroup = this.statsData.getCharacter().getActiveStackFormGroup();
+                var stackFormConfig = com.dragonminez.common.config.ConfigManager.getStackFormGroup(currentStackGroup);
+                if (currentStackGroup != null && !currentStackGroup.isEmpty() && stackFormConfig != null) {
+                    var stackData = stackFormConfig.getForm(stackForm);
+                    if (stackData != null) {
+                        double mastery = this.statsData.getCharacter().getStackFormMasteries()
+                                .getMastery(currentStackGroup, stackForm);
+                        double maxMastery = stackData.getMaxMastery();
+                        MutableComponent stackLabel = Component.translatable(
+                                        "race.dragonminez.stack.group." + currentStackGroup)
+                                .withStyle(Style.EMPTY.withFont(DMZ_FONT))
+                                .append(" ")
+                                .append(Component.translatable(
+                                                "race.dragonminez.stack.form." + currentStackGroup + "." + stackForm)
+                                        .withStyle(Style.EMPTY.withFont(DMZ_FONT)));
+                        tooltipLines.add(
+                                Component.literal(" ").withStyle(Style.EMPTY.withFont(DMZ_FONT))
+                                        .append(stackLabel.copy().withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.GRAY)))
+                                        .append(Component.literal(": " + String.format(Locale.US, "%.2f", mastery)
+                                                        + " / " + String.format(Locale.US, "%.0f", maxMastery))
+                                                .withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.AQUA))));
+                    }
+                }
+            }
+
+            if (!tooltipLines.isEmpty()) {
+                com.dragonminez.client.util.TextUtil.renderAdvancedTooltip(
+                        graphics, font, mouseX, mouseY, uiW, uiH,
+                        tooltipTitle, tooltipLines, new ArrayList<>(), 16763904);
+            }
+        }
 
         // Class
         drawTrBold(graphics, font, "gui.dragonminez.character_stats.class", labelX, startY + 33, 14155509);
@@ -204,6 +266,8 @@ public class CharacterStatsScreenMixin {
         }
         graphics.drawString(font, bottomValue, bottomValueX, bottomY, valueColor, true);
 
+        drawRaw(graphics, font, "x" + this.tpMultiplier, bottomValueX, bottomY + 10, 2883554);
+
         int bottomWidth = font.width(bottomValue);
         if (mouseX >= 42 && mouseX <= bottomValueX + bottomWidth && mouseY >= bottomY && mouseY <= bottomY + 9) {
             List<Component> desc = new ArrayList<>();
@@ -258,25 +322,25 @@ public class CharacterStatsScreenMixin {
     private static void drawTrBold(GuiGraphics g, Font font, String key, int x, int y, int color) {
         MutableComponent c = Component.translatable(key)
                 .withStyle(Style.EMPTY.withFont(DMZ_FONT).withBold(true));
-        g.drawString(font, c, x, y, color, true);
+        com.dragonminez.client.util.TextUtil.drawStringWithBorder(g, font, c, x, y, color, 0);
     }
 
     private static void drawCenteredTr(GuiGraphics g, Font font, String key, int x, int y, int color, boolean bold) {
         MutableComponent c = Component.translatable(key)
                 .withStyle(Style.EMPTY.withFont(DMZ_FONT).withBold(bold));
-        g.drawCenteredString(font, c, x, y, color);
+        com.dragonminez.client.util.TextUtil.drawCenteredStringWithBorder(g, font, c, x, y, color, 0);
     }
 
     private static void drawRaw(GuiGraphics g, Font font, String text, int x, int y, int color) {
         MutableComponent c = Component.literal(text)
                 .withStyle(Style.EMPTY.withFont(DMZ_FONT));
-        g.drawString(font, c, x, y, color, true);
+        com.dragonminez.client.util.TextUtil.drawStringWithBorder(g, font, c, x, y, color, 0);
     }
 
     private static void drawRawBold(GuiGraphics g, Font font, String text, int x, int y, int color) {
         MutableComponent c = Component.literal(text)
                 .withStyle(Style.EMPTY.withFont(DMZ_FONT).withBold(true));
-        g.drawString(font, c, x, y, color, true);
+        com.dragonminez.client.util.TextUtil.drawStringWithBorder(g, font, c, x, y, color, 0);
     }
 
     private static String formatNumber(long value) {
