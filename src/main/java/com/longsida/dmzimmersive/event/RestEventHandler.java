@@ -120,7 +120,11 @@ public class RestEventHandler {
             if (afterManual[source] <= 0) continue;
             double[] row = ImmersiveConfig.getDistributor(STATS[source]);
             for (int target = 0; target < 6; target++) {
-                attributeGains[target] += (int) (afterManual[source] * row[target]);
+                double raw = afterManual[source] * row[target];
+                if (raw <= 0) continue;
+                int gain = (int) raw;
+                if (gain == 0) gain = 1;
+                attributeGains[target] += gain;
             }
         }
 

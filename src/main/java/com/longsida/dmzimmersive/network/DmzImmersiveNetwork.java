@@ -1,5 +1,6 @@
 package com.longsida.dmzimmersive.network;
 
+import com.longsida.dmzimmersive.network.packet.SpRequestC2S;
 import com.longsida.dmzimmersive.network.packet.SpSyncS2C;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,6 +27,13 @@ public class DmzImmersiveNetwork {
                 SpSyncS2C::encode,
                 SpSyncS2C::decode,
                 SpSyncS2C::handle
+        );
+        CHANNEL.registerMessage(
+                packetId++,
+                SpRequestC2S.class,
+                SpRequestC2S::encode,
+                SpRequestC2S::decode,
+                SpRequestC2S::handle
         );
     }
 

@@ -15,6 +15,9 @@ import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.At;
 
 import java.lang.reflect.Method;
 import java.text.NumberFormat;
@@ -29,6 +32,13 @@ public class CharacterStatsScreenMixin {
             ResourceLocation.fromNamespaceAndPath("dragonminez", "smooth");
 
     @Shadow private StatsData statsData;
+
+    //同步用户属性值界面，每次打开刷新数值，不然tp sp一直会显示一开始的
+    @Inject(method = "m_7856_", at = @At("TAIL"), remap = false)
+    private void onInit(CallbackInfo ci) {
+        com.longsida.dmzimmersive.network.DmzImmersiveNetwork.CHANNEL.sendToServer(
+                new com.longsida.dmzimmersive.network.packet.SpRequestC2S());
+    }
 
     /**
      * @author longsida

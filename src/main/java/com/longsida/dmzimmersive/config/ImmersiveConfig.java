@@ -106,13 +106,14 @@ public class ImmersiveConfig {
                     .define("remainderStat", "VIT");
             builder.pop();
 
+            // 模式B Tp子池上限比例
             builder.push("weights");
-            weightStr = builder.defineInRange("STR", 0.1, 0.0, 1.0);
-            weightSkp = builder.defineInRange("SKP", 0.1, 0.0, 1.0);
-            weightPwr = builder.defineInRange("PWR", 0.1, 0.0, 1.0);
-            weightRes = builder.defineInRange("RES", 0.1, 0.0, 1.0);
-            weightVit = builder.defineInRange("VIT", 0.3, 0.0, 1.0);
-            weightEne = builder.defineInRange("ENE", 0.3, 0.0, 1.0);
+            weightStr = builder.defineInRange("STR", 0.1667, 0.0, 1.0);
+            weightSkp = builder.defineInRange("SKP", 0.1667, 0.0, 1.0);
+            weightPwr = builder.defineInRange("PWR", 0.1667, 0.0, 1.0);
+            weightRes = builder.defineInRange("RES", 0.1667, 0.0, 1.0);
+            weightVit = builder.defineInRange("VIT", 0.1667, 0.0, 1.0);
+            weightEne = builder.defineInRange("ENE", 0.1667, 0.0, 1.0);
             builder.pop();
 
             builder.push("modeA");
@@ -124,13 +125,14 @@ public class ImmersiveConfig {
             modeAEne = builder.defineInRange("ENE", 0.3, 0.0, 1.0);
             builder.pop();
 
+            //模式B Tp子池转为属性点比例
             builder.push("modeB");
-            distributorStr = builder.define("STR", "1,0,0,0,0,0");
-            distributorSkp = builder.define("SKP", "0,1,0,0,0,0");
-            distributorPwr = builder.define("PWR", "0,0,1,0,0,0");
-            distributorRes = builder.define("RES", "0,0,0,1,0,0");
-            distributorVit = builder.define("VIT", "0,0,0,0,1,0");
-            distributorEne = builder.define("ENE", "0,0,0,0,0,1");
+            distributorStr = builder.define("STR", "0.6,0,0,0,0,0");
+            distributorSkp = builder.define("SKP", "0,0.6,0,0,0,0");
+            distributorPwr = builder.define("PWR", "0,0,0.6,0,0,0");
+            distributorRes = builder.define("RES", "0,0,0,0.6,0,0");
+            distributorVit = builder.define("VIT", "0,0,0,0,1.8,0");
+            distributorEne = builder.define("ENE", "0,0,0,0,0,1.8");
             builder.pop();
         }
     }
