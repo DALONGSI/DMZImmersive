@@ -211,7 +211,139 @@ public class CharacterStatsScreenMixin {
             drawRaw(graphics, font, statText, valueX + 5, yPos, statColor);
 
             if (mouseX >= statLabelX && mouseX <= statLabelX + 25 && mouseY >= yPos && mouseY <= yPos + 9) {
+                MutableComponent title = Component.translatable("gui.dragonminez.character_stats." + statNames[i])
+                        .withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.BOLD));
+                List<Component> desc = new ArrayList<>();
+                desc.add(Component.translatable("gui.dragonminez.character_stats." + statNames[i] + ".desc")
+                        .withStyle(Style.EMPTY.withFont(DMZ_FONT)));
                 List<Component> extras = new ArrayList<>();
+
+                if (hasMult) {
+                    extras.add(Component.translatable("gui.dragonminez.character_stats.base_value")
+                            .withStyle(Style.EMPTY.withFont(DMZ_FONT))
+                            .append(Component.literal(": " + formatNumber(baseValue))
+                                    .withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.GRAY))));
+                    extras.add(Component.translatable("gui.dragonminez.character_stats.modified_value")
+                            .withStyle(Style.EMPTY.withFont(DMZ_FONT))
+                            .append(Component.literal(": " + formatNumber((int) modifiedValue))
+                                    .withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.YELLOW))));
+
+                    if (statNamesUpper[i].equals("RES")) {
+                        double formDef = this.statsData.getFormMultiplier("DEF");
+                        double formStm = this.statsData.getFormMultiplier("STM");
+                        double stackDef = this.statsData.getStackFormMultiplier("DEF");
+                        double stackStm = this.statsData.getStackFormMultiplier("STM");
+                        double effectsDef = this.statsData.getEffectsMultiplier("DEF");
+                        double effectsStm = this.statsData.getEffectsMultiplier("STM");
+                        double secondaryDef = this.statsData.getSecondaryStatEffects().getMultiplier("DEF");
+                        boolean hasForm = Math.abs(formDef - 1.0) > 0.01 || Math.abs(formStm - 1.0) > 0.01;
+                        boolean hasStack = Math.abs(stackDef - 1.0) > 0.01 || Math.abs(stackStm - 1.0) > 0.01;
+                        boolean hasEffects = Math.abs(effectsDef - 1.0) > 0.01 || Math.abs(effectsStm - 1.0) > 0.01;
+                        boolean hasSecondary = Math.abs(secondaryDef - 1.0) > 0.01;
+
+                        if (hasForm || hasStack || hasEffects || hasSecondary) {
+                            extras.add(Component.translatable("gui.dragonminez.character_stats.multipliers")
+                                    .withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.AQUA)));
+                            if (hasForm) {
+                                extras.add(Component.translatable("gui.dragonminez.character_stats.form_multiplier")
+                                        .withStyle(Style.EMPTY.withFont(DMZ_FONT))
+                                        .append(Component.literal(" (").withStyle(Style.EMPTY.withFont(DMZ_FONT)))
+                                        .append(Component.translatable("gui.dragonminez.character_stats.def").withStyle(Style.EMPTY.withFont(DMZ_FONT)))
+                                        .append(Component.literal(": x" + String.format(Locale.US, "%.2f", formDef) + ", ").withStyle(Style.EMPTY.withFont(DMZ_FONT)))
+                                        .append(Component.translatable("gui.dragonminez.character_stats.stm").withStyle(Style.EMPTY.withFont(DMZ_FONT)))
+                                        .append(Component.literal(": x" + String.format(Locale.US, "%.2f", formStm) + ")").withStyle(Style.EMPTY.withFont(DMZ_FONT)))
+                                        .withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.GOLD)));
+                            }
+                            if (hasStack) {
+                                extras.add(Component.translatable("gui.dragonminez.character_stats.stack_multiplier")
+                                        .withStyle(Style.EMPTY.withFont(DMZ_FONT))
+                                        .append(Component.literal(" (").withStyle(Style.EMPTY.withFont(DMZ_FONT)))
+                                        .append(Component.translatable("gui.dragonminez.character_stats.def").withStyle(Style.EMPTY.withFont(DMZ_FONT)))
+                                        .append(Component.literal(": x" + String.format(Locale.US, "%.2f", stackDef) + ", ").withStyle(Style.EMPTY.withFont(DMZ_FONT)))
+                                        .append(Component.translatable("gui.dragonminez.character_stats.stm").withStyle(Style.EMPTY.withFont(DMZ_FONT)))
+                                        .append(Component.literal(": x" + String.format(Locale.US, "%.2f", stackStm) + ")").withStyle(Style.EMPTY.withFont(DMZ_FONT)))
+                                        .withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.RED)));
+                            }
+                            if (hasEffects) {
+                                extras.add(Component.translatable("gui.dragonminez.character_stats.effects_multiplier")
+                                        .withStyle(Style.EMPTY.withFont(DMZ_FONT))
+                                        .append(Component.literal(" (").withStyle(Style.EMPTY.withFont(DMZ_FONT)))
+                                        .append(Component.translatable("gui.dragonminez.character_stats.def").withStyle(Style.EMPTY.withFont(DMZ_FONT)))
+                                        .append(Component.literal(": x" + String.format(Locale.US, "%.2f", effectsDef) + ", ").withStyle(Style.EMPTY.withFont(DMZ_FONT)))
+                                        .append(Component.translatable("gui.dragonminez.character_stats.stm").withStyle(Style.EMPTY.withFont(DMZ_FONT)))
+                                        .append(Component.literal(": x" + String.format(Locale.US, "%.2f", effectsStm) + ")").withStyle(Style.EMPTY.withFont(DMZ_FONT)))
+                                        .withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.LIGHT_PURPLE)));
+                            }
+                            if (hasSecondary) {
+                                extras.add(Component.translatable("gui.dragonminez.character_stats.secondary_multiplier")
+                                        .withStyle(Style.EMPTY.withFont(DMZ_FONT))
+                                        .append(Component.literal(" (").withStyle(Style.EMPTY.withFont(DMZ_FONT)))
+                                        .append(Component.translatable("gui.dragonminez.character_stats.def").withStyle(Style.EMPTY.withFont(DMZ_FONT)))
+                                        .append(Component.literal(": x" + String.format(Locale.US, "%.2f", secondaryDef) + ")").withStyle(Style.EMPTY.withFont(DMZ_FONT)))
+                                        .withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.DARK_AQUA)));
+                            }
+                        }
+                    } else {
+                        double formMultiplier = this.statsData.getFormMultiplier(statNamesUpper[i]);
+                        double stackMultiplier = this.statsData.getStackFormMultiplier(statNamesUpper[i]);
+                        double effectsMultiplier = this.statsData.getEffectsMultiplier(statNamesUpper[i]);
+                        double secondaryMultiplier = this.statsData.getSecondaryStatEffects().getMultiplier(statNamesUpper[i]);
+                        boolean hasForm = Math.abs(formMultiplier - 1.0) > 0.01;
+                        boolean hasStack = Math.abs(stackMultiplier - 1.0) > 0.01;
+                        boolean hasEffects = Math.abs(effectsMultiplier - 1.0) > 0.01;
+                        boolean hasSecondary = Math.abs(secondaryMultiplier - 1.0) > 0.01;
+
+                        if (hasForm || hasStack || hasEffects || hasSecondary) {
+                            extras.add(Component.translatable("gui.dragonminez.character_stats.multipliers")
+                                    .withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.AQUA)));
+                            if (hasForm) extras.add(Component.translatable("gui.dragonminez.character_stats.form_multiplier")
+                                    .withStyle(Style.EMPTY.withFont(DMZ_FONT))
+                                    .append(Component.literal(" x" + String.format(Locale.US, "%.2f", formMultiplier))
+                                            .withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.GOLD))));
+                            if (hasStack) extras.add(Component.translatable("gui.dragonminez.character_stats.stack_multiplier")
+                                    .withStyle(Style.EMPTY.withFont(DMZ_FONT))
+                                    .append(Component.literal(" x" + String.format(Locale.US, "%.2f", stackMultiplier))
+                                            .withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.RED))));
+                            if (hasEffects) extras.add(Component.translatable("gui.dragonminez.character_stats.effects_multiplier")
+                                    .withStyle(Style.EMPTY.withFont(DMZ_FONT))
+                                    .append(Component.literal(" x" + String.format(Locale.US, "%.2f", effectsMultiplier))
+                                            .withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.LIGHT_PURPLE))));
+                            if (hasSecondary) extras.add(Component.translatable("gui.dragonminez.character_stats.secondary_multiplier")
+                                    .withStyle(Style.EMPTY.withFont(DMZ_FONT))
+                                    .append(Component.literal(" x" + String.format(Locale.US, "%.2f", secondaryMultiplier))
+                                            .withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.DARK_AQUA))));
+                        }
+                    }
+                }
+
+                List<com.dragonminez.common.stats.character.BonusStats.StatBonus> bonuses =
+                        new ArrayList<>(this.statsData.getBonusStats().getBonuses(statNamesUpper[i]));
+                if (statNamesUpper[i].equals("RES")) {
+                    List<String> seenNames = new ArrayList<>();
+                    for (var b : bonuses) seenNames.add(b.name);
+                    for (var b : this.statsData.getBonusStats().getBonuses("DEF")) {
+                        if (!seenNames.contains(b.name)) { bonuses.add(b); seenNames.add(b.name); }
+                    }
+                    for (var b : this.statsData.getBonusStats().getBonuses("STM")) {
+                        if (!seenNames.contains(b.name)) { bonuses.add(b); seenNames.add(b.name); }
+                    }
+                }
+                bonuses.sort((a, b) -> a.name.compareTo(b.name));
+                if (!bonuses.isEmpty()) {
+                    extras.add(Component.translatable("gui.dragonminez.character_stats.bonus")
+                            .withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.AQUA)));
+                    for (var bonus : bonuses) {
+                        String opDisplay = bonus.operation.equals("*") ? "x" : bonus.operation;
+                        String bonusText = bonus.name.replace("_", " ") + ": " + opDisplay
+                                + (bonus.operation.equals("*")
+                                ? String.format(Locale.US, "%.2f", bonus.value)
+                                : String.format(Locale.US, "%.0f", bonus.value));
+                        extras.add(Component.literal("  " + bonusText)
+                                .withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.GREEN)));
+                    }
+                }
+
+                // 我们的子池进度
                 float pool = SpClientCache.getSubPool(statNamesUpper[i]);
                 int totalStats = this.statsData.getStats().getTotalStats();
                 int capBase = ImmersiveConfig.COMMON.capBase.get();
@@ -221,17 +353,12 @@ public class CharacterStatsScreenMixin {
                 float percent = subCap <= 0 ? 0 : (pool / subCap * 100f);
                 if (percent < 0) percent = 0;
                 if (percent > 100) percent = 100;
-
                 extras.add(Component.literal("训练进度 / Training Progress: " + String.format(Locale.US, "%.1f%%", percent))
                         .withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.GREEN)));
 
                 com.dragonminez.client.util.TextUtil.renderAdvancedTooltip(
-                        graphics, font, mouseX, mouseY,
-                        uiW, uiH,
-                        Component.translatable("gui.dragonminez.character_stats." + statNames[i])
-                                .withStyle(Style.EMPTY.withFont(DMZ_FONT).withColor(ChatFormatting.BOLD)),
-                        new ArrayList<>(),
-                        extras, 14095410);
+                        graphics, font, mouseX, mouseY, uiW, uiH,
+                        title, desc, extras, 14095410);
             }
         }
 
